@@ -3,7 +3,7 @@
 ## ZidooDigitalSignage
 
 ZidooDigitalSignage is a demo project for Digital Signage Application.
-The demo includes follow contents:                 
+The demo includes below contents:                 
 
 1. Screen rotation                                
 2. Screen zoom in / out
