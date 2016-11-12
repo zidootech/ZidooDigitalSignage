@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Zidoo Digital signage</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="showtext">ZIDOO is a Professional Android STB Manufacturer, an advanced ARM multi-core industrial product and consumer electronics developer.  Although only founded in 2014, our founders are highly experienced and seasoned in the OTT field and are committed to deliver expert professional technical services to a well-known brand at home and abroad</string>
+
+</resources>

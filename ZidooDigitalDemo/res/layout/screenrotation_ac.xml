@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dip"
+        android:layout_marginTop="30dip"
+        android:textColor="#00aa00"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/d_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onMyClick"
+            android:text="0"
+            android:textSize="38sp" />
+
+        <Button
+            android:id="@+id/d_90"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:onClick="onMyClick"
+            android:text="90"
+            android:textSize="38sp" />
+
+        <Button
+            android:id="@+id/d_180"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:onClick="onMyClick"
+            android:text="180"
+            android:textSize="38sp" />
+
+        <Button
+            android:id="@+id/d_270"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dip"
+            android:onClick="onMyClick"
+            android:text="270"
+            android:textSize="38sp" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,121 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dip"
+        android:layout_marginTop="50dip"
+        android:text="@string/app_name"
+        android:textColor="#000000"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/screenrotation"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:onClick="onMyClick"
+                android:text="Screen rotates"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <Button
+                android:id="@+id/screenscale"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:onClick="onMyClick"
+                android:text="Screen zoom"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <Button
+                android:id="@+id/screenresolution"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:onClick="onMyClick"
+                android:text="Resolution"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/hdmi"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:onClick="onMyClick"
+                android:text="Hdmi in"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <Button
+                android:id="@+id/pip"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:onClick="onMyClick"
+                android:text="Hdmi Pip"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <Button
+                android:id="@+id/hdmi_video_web"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:onClick="onMyClick"
+                android:text="Hdmi video web"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/videos"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:onClick="onMyClick"
+                android:text="Multi video"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+
+            <Button
+                android:id="@+id/digital"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:onClick="onMyClick"
+                android:text="Digital signage"
+                android:textColor="#000000"
+                android:textSize="26sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

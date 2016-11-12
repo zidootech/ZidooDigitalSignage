@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dip"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/display_1"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+
+            <include
+                android:id="@+id/display_2"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/display_3"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+
+            <include
+                android:id="@+id/display_4"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dip"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/display_5"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+
+            <include
+                android:id="@+id/display_6"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <include
+                android:id="@+id/display_7"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+
+            <include
+                android:id="@+id/display_8"
+                android:layout_width="320dip"
+                android:layout_height="240dip"
+                layout="@layout/surfaceview_item" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

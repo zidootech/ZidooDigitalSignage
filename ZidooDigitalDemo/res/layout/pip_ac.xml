@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <Button
+        android:id="@+id/open_pip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dip"
+        android:layout_marginTop="50dip"
+        android:onClick="onMyClick"
+        android:padding="8dip"
+        android:text="Open pip"
+        android:textSize="20sp" />
+
+</RelativeLayout>
