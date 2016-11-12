@@ -5,14 +5,14 @@
 ZidooDigitalSignage is a demo project for Digital Signage Application.
 The demo includes below contents:                 
 
-1. Screen rotation                                
-2. Screen zoom in / out
-3. Display output resolution switch                
-4. HDMI IN player                                  
-5. HDMI IN picture in picture (PIP)
-6. Multi Views display (HDMI IN + Video playing + Web browsing)
-7. Multi Videos decode                            
-8. AD player
+1. AD player
+2. Multi Views display (HDMI IN + Video playing + Web browsing)
+3. Multi Videos decode
+4. Screen rotation                                
+5. Screen zoom in / out
+6. Display output resolution switch                
+7. HDMI IN player                                  
+8. HDMI IN picture in picture (PIP)
 
 Please find more detail in readme.docx                         
 
@@ -24,6 +24,15 @@ Try and Enjoy it!
 Thanks for your attention to this project. 
 
 ## Prview
+
+AD player
+![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/ad_player.png)
+
+Multi Views display (HDMI IN + Video playing + Web browsing)
+![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/hdmi_in_video_web.png)
+
+Multi Videos decode
+![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/multi_video_decode.png)
 
 Screen rotation
 ![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/screen_rotation.png)
@@ -39,13 +48,3 @@ HDMI IN player
 
 HDMI IN picture in picture (PIP)
 ![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/hdmi_in_pip.png)
-
-Multi Views display (HDMI IN + Video playing + Web browsing)
-![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/hdmi_in_video_web.png)
-
-
-Multi Videos decode
-![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/multi_video_decode.png)
-
-AD player
-![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/ad_player.png)
