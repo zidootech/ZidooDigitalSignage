@@ -23,7 +23,10 @@ Try and Enjoy it!
 
 Thanks for your attention to this project. 
 
-## Prview
+## Preview video
+https://www.youtube.com/watch?v=LFJzIgwbfww
+
+## Prview photos
 
 AD player
 ![image](https://raw.githubusercontent.com/zidootech/ZidooDigitalSignage/master/preview/ad_player.png)
