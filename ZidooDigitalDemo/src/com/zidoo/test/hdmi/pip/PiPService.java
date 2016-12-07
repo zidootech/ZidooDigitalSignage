@@ -20,6 +20,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.view.Gravity;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,34 +36,39 @@ import com.realtek.server.HDMIRxStatus;
 import com.zidoo.test.zidooutil.MyLog;
 
 public class PiPService extends Service {
-	private final static String				TAG							= "PiPService";
-	private IBinder							mBinder						= new LocalBinder();
-	private Context							mContext					= null;
-	private RtkHDMIRxManager				mHDMIRX						= null;
-	private boolean							mIsPlaying					= false;
+	private final static String				TAG						= "PiPService";
+	private IBinder							mBinder					= new LocalBinder();
+	private Context							mContext				= null;
+	private RtkHDMIRxManager				mHDMIRX					= null;
+	private boolean							mIsPlaying				= false;
 	// hdmi info
-	private int								mFps						= 0;
-	private int								mRecordFrameRate			= 0;
-	private int								mWidth						= 0;
-	private int								mHeight						= 0;
+	private int								mFps					= 0;
+	private int								mRecordFrameRate		= 0;
+	private int								mWidth					= 0;
+	private int								mHeight					= 0;
 	// hdmi display
-	private WindowManager					mWindowManager				= null;
-	private FloatingWindowView				mFloatingView				= null;
-	private TextView						mSigleView					= null;
-	public View								mPreview					= null;
-	public TextureView						mTextureView				= null;
-	public SurfaceTexture					mSurfaceTextureForNoPreview	= null;
-	public FloatingWindowTextureListener	mListener					= null;
-	public WindowManager.LayoutParams		wmParams					= null;
+	private static final int				TYPE_SURFACEVIEW		= 0;
+	private static final int				TYPE_TEXTUREVIEW		= 1;
+	private int								mViewType				= TYPE_SURFACEVIEW;
+	private WindowManager					mWindowManager			= null;
+	private FloatingWindowView				mFloatingView			= null;
+	private TextView						mSigleView				= null;
+	public View								mPreview				= null;
+	private SurfaceView						mSurfaceView			= null;
+	private SurfaceHolder					mSurfaceHolder			= null;
+	public FloatingWindowSurfaceCallback	mCallback				= null;
+	public TextureView						mTextureView			= null;
+	public FloatingWindowTextureListener	mListener				= null;
+	public WindowManager.LayoutParams		wmParams				= null;
 	// hdmi statu
-	private boolean							isPreviewOn					= false;
-	private boolean							isPip						= false;
-	private boolean							isHdmiConnect				= false;
-	private BroadcastReceiver				mHdmiRxHotPlugReceiver		= null;
-	private Handler							mHandler					= null;
-	private final static int				DISPLAY						= 0;
-	private final static int				CLOSESOUND					= 1;
-	private final static int				DISPLAYTIME					= 200;
+	private boolean							isPreviewOn				= false;
+	private boolean							isPip					= false;
+	private boolean							isHdmiConnect			= false;
+	private BroadcastReceiver				mHdmiRxHotPlugReceiver	= null;
+	private Handler							mHandler				= null;
+	private final static int				DISPLAY					= 0;
+	private final static int				CLOSESOUND				= 1;
+	private final static int				DISPLAYTIME				= 200;
 
 	public class LocalBinder extends Binder {
 
@@ -177,9 +184,13 @@ public class PiPService extends Service {
 				return false;
 			}
 			try {
-				SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
-				// mTextureView.setRotation(180);
-				mHDMIRX.setPreviewDisplay3(surfaceTexture);
+				if (mViewType == TYPE_SURFACEVIEW) {
+					mHDMIRX.setPreviewDisplay(mSurfaceHolder);
+				} else if (mViewType == TYPE_TEXTUREVIEW) {
+					SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
+					// mTextureView.setRotation(180);
+					mHDMIRX.setPreviewDisplay3(surfaceTexture);
+				}
 				// configureTargetFormat
 				HDMIRxParameters hdmirxParam = new HDMIRxParameters();
 				MyLog.v(TAG, "hdmi setPreviewSize  mWidth = " + mWidth + "  mHeight = " + mHeight + "  mFps = " + mFps);
@@ -237,6 +248,11 @@ public class PiPService extends Service {
 				mContext.unregisterReceiver(mHdmiRxHotPlugReceiver);
 				mHdmiRxHotPlugReceiver = null;
 				stop();
+				if (mViewType == TYPE_SURFACEVIEW) {
+					if (mSurfaceView != null && mSurfaceHolder != null && mCallback != null) {
+						mSurfaceHolder.removeCallback(mCallback);
+					}
+				}
 				if (mWindowManager != null && mFloatingView != null) {
 					mWindowManager.removeView(mFloatingView);
 					mFloatingView = null;
@@ -322,10 +338,20 @@ public class PiPService extends Service {
 		ViewGroup surfaceRootview = (ViewGroup) mFloatingView.findViewById(R.id.floating_surfaceview);
 		mSigleView.setVisibility(isHdmiConnect ? View.GONE : View.VISIBLE);
 		// setup view type
-		mTextureView = new TextureView(mContext);
-		mListener = new FloatingWindowTextureListener();
-		mTextureView.setSurfaceTextureListener(mListener);
-		mPreview = mTextureView;
+		// setup view type
+		if (mViewType == TYPE_SURFACEVIEW) {
+			mSurfaceView = new SurfaceView(mContext);
+			mSurfaceHolder = mSurfaceView.getHolder();
+			mCallback = new FloatingWindowSurfaceCallback();
+			mSurfaceHolder.addCallback(mCallback);
+			mPreview = mSurfaceView;
+		} else if (mViewType == TYPE_TEXTUREVIEW) {
+			mTextureView = new TextureView(mContext);
+			mListener = new FloatingWindowTextureListener();
+			mTextureView.setSurfaceTextureListener(mListener);
+			mPreview = mTextureView;
+		}
+
 		RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 		mPreview.setLayoutParams(param);
 		surfaceRootview.addView(mPreview);
@@ -373,6 +399,26 @@ public class PiPService extends Service {
 
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+		}
+	}
+
+	class FloatingWindowSurfaceCallback implements SurfaceHolder.Callback {
+		@Override
+		public void surfaceChanged(SurfaceHolder arg0, int arg1, int width, int height) {
+		}
+
+		@Override
+		public void surfaceCreated(SurfaceHolder arg0) {
+			MyLog.v(TAG, "SurfaceHolder surfaceCreated");
+			isPreviewOn = true;
+			// play();
+		}
+
+		@Override
+		public void surfaceDestroyed(SurfaceHolder arg0) {
+			MyLog.v(TAG, "SurfaceHolder surfaceDestroyed");
+			// stop();
+			isPreviewOn = false;
 		}
 	}
 

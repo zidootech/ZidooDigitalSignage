@@ -72,7 +72,7 @@ public class DigitalSignageActivity extends Activity implements OnClickListener 
 				// TODO Auto-generated method stub
 				animation();
 			}
-		});
+		},ZidooHdmiDisPlay.TYPE_TEXTUREVIEW);
 		mRealtekeHdmi.startDisPlay();
 		mHandler.sendEmptyMessageDelayed(GDISPLAY, 5*1000);
 	}

@@ -29,7 +29,7 @@ public class HDMIActivity extends Activity {
 
 	private void initService() {
 		ViewGroup hdmiGroud = (ViewGroup) findViewById(R.id.home_ac_hdmi);
-		mRealtekeHdmi = new ZidooHdmiDisPlay(HDMIActivity.this, hdmiGroud, null);
+		mRealtekeHdmi = new ZidooHdmiDisPlay(HDMIActivity.this, hdmiGroud, null,ZidooHdmiDisPlay.TYPE_SURFACEVIEW);
 		mRealtekeHdmi.startDisPlay();
 	}
 

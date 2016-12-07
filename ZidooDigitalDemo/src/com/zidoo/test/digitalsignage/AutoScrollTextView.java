@@ -56,6 +56,11 @@ public class AutoScrollTextView extends TextView {
 	public AutoScrollTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
+	public AutoScrollTextView(Context context) {
+		super(context);
+	}
+	
+	
 
 	/**
 	 * 初始化自动滚动条,每次改变文字内容时，都需要重新初始化一次

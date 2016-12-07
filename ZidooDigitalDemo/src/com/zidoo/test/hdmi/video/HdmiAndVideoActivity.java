@@ -46,7 +46,7 @@ public class HdmiAndVideoActivity extends Activity implements OnClickListener {
 		});
 
 		ViewGroup hdmiGroud = (ViewGroup) findViewById(R.id.home_ac_hdmi);
-		mRealtekeHdmi = new ZidooHdmiDisPlay(HdmiAndVideoActivity.this, hdmiGroud, null);
+		mRealtekeHdmi = new ZidooHdmiDisPlay(HdmiAndVideoActivity.this, hdmiGroud, null,ZidooHdmiDisPlay.TYPE_SURFACEVIEW);
 		mRealtekeHdmi.startDisPlay();
 	}
 

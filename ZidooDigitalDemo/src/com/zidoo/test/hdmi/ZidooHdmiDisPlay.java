@@ -7,8 +7,6 @@ package com.zidoo.test.hdmi;
 
 import java.util.List;
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +14,8 @@ import android.content.IntentFilter;
 import android.graphics.SurfaceTexture;
 import android.os.Handler;
 import android.os.Message;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +32,14 @@ public class ZidooHdmiDisPlay {
 
 	public FloatingWindowTextureListener	mListener					= null;
 	public View								mPreview					= null;
+	public static final int					TYPE_SURFACEVIEW			= 0;
+	public static final int					TYPE_TEXTUREVIEW			= 1;
+	private int								mViewType					= TYPE_TEXTUREVIEW;
 	public TextureView						mTextureView				= null;
 	public SurfaceTexture					mSurfaceTextureForNoPreview	= null;
+	public FloatingWindowSurfaceCallback	mCallback					= null;
+	private SurfaceView						mSurfaceView				= null;
+	private SurfaceHolder					mSurfaceHolder				= null;
 	private RtkHDMIRxManager				mHDMIRX						= null;
 	private Handler							mHandler					= null;
 	private boolean							mPreviewOn					= false;
@@ -55,12 +61,13 @@ public class ZidooHdmiDisPlay {
 		public void fristDisplay();
 	}
 
-	public ZidooHdmiDisPlay(Context mContext, ViewGroup rootView, HdmiInFristDisplayListener mHdmiInFristDisplayListener) {
+	public ZidooHdmiDisPlay(Context mContext, ViewGroup rootView, HdmiInFristDisplayListener mHdmiInFristDisplayListener,int type) {
 		this.mContext = mContext;
 		this.mHdmiInFristDisplayListener = mHdmiInFristDisplayListener;
+		this.mViewType = type;
 		init(rootView);
 	}
-
+ 
 	public void init(ViewGroup rootView) {
 		mRootView = rootView;
 		init();
@@ -117,6 +124,7 @@ public class ZidooHdmiDisPlay {
 		if (mPreview != null) {
 			mPreview.setVisibility(View.INVISIBLE);
 		}
+
 		boolean rlt = true;
 		if (mHDMIRX != null) {
 			mHDMIRX.stop();
@@ -160,8 +168,14 @@ public class ZidooHdmiDisPlay {
 				return false;
 			}
 			try {
-				SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
-				mHDMIRX.setPreviewDisplay3(surfaceTexture);
+				MyLog.v("hdmi setPreviewSize  mViewType = " + mViewType);
+				if (mViewType == TYPE_SURFACEVIEW) {
+					mHDMIRX.setPreviewDisplay(mSurfaceHolder);
+				} else if (mViewType == TYPE_TEXTUREVIEW) {
+					SurfaceTexture surfaceTexture = mTextureView.getSurfaceTexture();
+					// mTextureView.setRotation(180);
+					mHDMIRX.setPreviewDisplay3(surfaceTexture);
+				}
 				// configureTargetFormat
 				HDMIRxParameters hdmirxParam = new HDMIRxParameters();
 				MyLog.v("hdmi setPreviewSize  mWidth = " + mWidth + "  mHeight = " + mHeight + "  mFps = " + mFps);
@@ -230,17 +244,31 @@ public class ZidooHdmiDisPlay {
 	}
 
 	private void initView() {
-		mTextureView = (TextureView) mRootView.findViewById(R.id.home_ac_video_hdmi_textureView);
-		mPreview = mTextureView;
-		mListener = new FloatingWindowTextureListener();
-		mTextureView.setSurfaceTextureListener(mListener);
+		// setup view type
+		RelativeLayout rooView = (RelativeLayout) mRootView.findViewById(R.id.home_ac_video_hdmi_textureView);
 		mHdmieSigleView = mRootView.findViewById(R.id.home_ac_video_hdmi_nosigle);
+		if (mViewType == TYPE_SURFACEVIEW) {
+			mSurfaceView = new SurfaceView(mContext);
+			mSurfaceHolder = mSurfaceView.getHolder();
+			mCallback = new FloatingWindowSurfaceCallback();
+			mSurfaceHolder.addCallback(mCallback);
+			mPreview = mSurfaceView;
+		} else if (mViewType == TYPE_TEXTUREVIEW) {
+			mTextureView = new TextureView(mContext);
+			mListener = new FloatingWindowTextureListener();
+			mTextureView.setSurfaceTextureListener(mListener);
+			mPreview = mTextureView;
+		}
+		RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		mPreview.setLayoutParams(param);
+		rooView.addView(mPreview);
 	}
 
 	class FloatingWindowTextureListener implements TextureView.SurfaceTextureListener {
 		@Override
 		public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 			mPreviewOn = true;
+			MyLog.v("FloatingWindowTextureListener = onSurfaceTextureAvailable");
 			// play();
 		}
 
@@ -257,6 +285,26 @@ public class ZidooHdmiDisPlay {
 
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+		}
+	}
+
+	class FloatingWindowSurfaceCallback implements SurfaceHolder.Callback {
+		@Override
+		public void surfaceChanged(SurfaceHolder arg0, int arg1, int width, int height) {
+		}
+
+		@Override
+		public void surfaceCreated(SurfaceHolder arg0) {
+			MyLog.v("FloatingWindowSurfaceCallback = surfaceCreated");
+			mPreviewOn = true;
+			// play();
+		}
+
+		@Override
+		public void surfaceDestroyed(SurfaceHolder arg0) {
+			// stop();
+			mPreviewOn = false;
 		}
 	}
 
@@ -272,6 +320,11 @@ public class ZidooHdmiDisPlay {
 
 	public boolean exit() {
 		stopDisPlay();
+		if (mViewType == TYPE_SURFACEVIEW) {
+			if (mSurfaceView != null && mSurfaceHolder != null && mCallback != null) {
+				mSurfaceHolder.removeCallback(mCallback);
+			}
+		}
 		mContext.unregisterReceiver(mHdmiRxHotPlugReceiver);
 		mHdmiRxHotPlugReceiver = null;
 		MyLog.v("exit");
