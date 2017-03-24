@@ -42,12 +42,12 @@ public class FloatingWindowView extends FrameLayout {
 	private boolean				isMove				= true;
 
 	// /////////////////////////
-	final int					MIN_RATIO			= 9;				// 垂直方向拉伸的宽度
+	final int					MIN_RATIO			= 9;
 	private PointF				mLastDownPoint		= null;
 	int							mBorder, mMinWidth, mMinHeight, mScreenWidth, mScreenHeight;
 	int							mType				= 0;
 	boolean						mStretchingDerailly	= false;
-	float						mRatio				= 0.5625f;									// 高比宽
+	float						mRatio				= 0.5625f;
 	private Handler				mHandler			= null;
 	private final static int	GONE				= 0;
 	private final static int	GONETIME			= 3 * 1000;
@@ -81,7 +81,6 @@ public class FloatingWindowView extends FrameLayout {
 
 			@Override
 			public void onClick(View v) {
-				// 更新界面
 				WindowManager.LayoutParams lp = (android.view.WindowManager.LayoutParams) getLayoutParams();
 				if (lp.width == 1920) {
 					mBigView.setImageResource(R.drawable.big);
@@ -157,12 +156,6 @@ public class FloatingWindowView extends FrameLayout {
 		}
 	}
 
-	/**
-	 * 设置缩放比例
-	 * 
-	 * @param ratio
-	 *            缩放比例
-	 */
 	public void setRatio(float ratio) {
 		mRatio = ratio;
 	}
@@ -268,71 +261,65 @@ public class FloatingWindowView extends FrameLayout {
 			return super.onTouchEvent(event);
 		}
 
-		// 获取在屏幕上的位置
 		final float x = event.getRawX();
 		final float y = event.getRawY();
 
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN: {
-			// 判断是点中什么位置
 			float vx = event.getX();
 			float vy = event.getY();
 			mType = (vx < mBorder ? 1 : 0) | (vy < mBorder ? 1 << 1 : 0) | (getWidth() - vx < mBorder ? 1 << 2 : 0) | (getHeight() - vy < mBorder ? 1 << 3 : 0);
 
-			// 保存按下(DOWN)的位置
 			mLastDownPoint = new PointF(x, y);
 		}
 			return true;
 		case MotionEvent.ACTION_MOVE: {
 			if (mStretchingDerailly) {
-				// 拉伸时已经偏离了边缘,重新检查看是否已经回到正轨
 				float vx = event.getX();
 				float vy = event.getY();
 				int type = (vx < mBorder ? 1 : 0) | (vy < mBorder ? 1 << 1 : 0) | (getWidth() - vx < mBorder ? 1 << 2 : 0) | (getHeight() - vy < mBorder ? 1 << 3 : 0);
 
-				mStretchingDerailly = type != mType;// 当相等时重新回到正轨
+				mStretchingDerailly = type != mType;
 			} else {
-				// 计算移动的距离
 				float dx = x - mLastDownPoint.x;
 				float dy = y - mLastDownPoint.y;
 
-				// 根据点击的位置重新设置位置
 				WindowManager.LayoutParams lp = (android.view.WindowManager.LayoutParams) getLayoutParams();
 				switch (mType) {
-				case 0:// 中间
+				case 0:// middle
 					lp.x = offset(lp.x, dx, lp.width, mScreenWidth);
 					lp.y = offset(lp.y, dy, lp.height, mScreenHeight);
 					break;
-				case 1:// 左边
+				case 1:// left
 					lp.x = offset(lp.x, dx, lp.width, mScreenWidth);
 					lp.width -= dx;
 					break;
-				case 2:// 上边
+				case 2:// top
 					lp.y = offset(lp.y, dy, lp.height, mScreenHeight);
 					lp.height -= dy;
 					break;
-				case 4:// 右边
+				case 4:// right
 					lp.width += dx;
 					break;
-				case 8:// 下边
+				case 8:// bottom
 					lp.height += dy;
 					break;
-				case 3:// 左上
+				case 3:// top-left
 					lp.x = offset(lp.x, dx, lp.width, mScreenWidth);
 					lp.y = offset(lp.y, dy, lp.height, mScreenHeight);
 					lp.width -= dx;
 					lp.height -= dy;
 					break;
-				case 6:// 右上
+				case 6:// top-right
 					lp.y = offset(lp.y, dy, lp.height, mScreenHeight);
 					lp.height -= dy;
 					lp.width += dx;
 					break;
-				case 12:// 右下
+				case 12:// bottom-right
 					lp.width += dx;
 					lp.height += dy;
 					break;
-				case 9:// 左下
+				case 9:// bottom-left
 					lp.x = offset(lp.x, dx, lp.width, mScreenWidth);
 					lp.width -= dx;
 					lp.height += dy;
@@ -352,17 +339,15 @@ public class FloatingWindowView extends FrameLayout {
 					mStretchingDerailly = true;
 				}
 
-				// 更新界面
 				WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
 				wm.updateViewLayout(this, lp);
 			}
 
-			// 保存这次点击的位置
 			mLastDownPoint = new PointF(x, y);
 		}
 			return true;
 		case MotionEvent.ACTION_UP: {
-			// 保存位置
+			// save position
 			WindowManager.LayoutParams lp = (android.view.WindowManager.LayoutParams) getLayoutParams();
 			mStretchingDerailly = false;
 			if (lp.width == 1920) {
@@ -405,17 +390,14 @@ public class FloatingWindowView extends FrameLayout {
 				WindowManager.LayoutParams lp = (android.view.WindowManager.LayoutParams) getLayoutParams();
 				float cr = (float) lp.height / lp.width;
 				if (cr == mRatio) {
-					// 已经成比例
 					lp.width = Math.min(lp.width + (int) (MIN_RATIO / mRatio), mScreenWidth);
 					lp.height = Math.min(lp.height + MIN_RATIO, mScreenHeight);
 				} else if (cr > mRatio) {
-					// 高度超过比例
 					lp.width = Math.min(lp.width + (int) (MIN_RATIO / mRatio), mScreenWidth);
 					if (lp.height < lp.width * mRatio) {
 						lp.height = Math.min((int) (lp.width * mRatio), mScreenHeight);
 					}
 				} else {
-					// 宽度超过比例
 					lp.height = Math.min(lp.height + MIN_RATIO, mScreenHeight);
 					if (lp.width < lp.height / mRatio) {
 						lp.width = Math.min((int) (lp.height / mRatio), mScreenWidth);
@@ -437,17 +419,14 @@ public class FloatingWindowView extends FrameLayout {
 				WindowManager.LayoutParams lp = (android.view.WindowManager.LayoutParams) getLayoutParams();
 				float cr = (float) lp.height / lp.width;
 				if (cr == mRatio) {
-					// 已经成比例
 					lp.width = Math.max(lp.width - (int) (MIN_RATIO / mRatio), mMinWidth);
 					lp.height = Math.max(lp.height - MIN_RATIO, mMinHeight);
 				} else if (cr > mRatio) {
-					// 高度超过比例
 					lp.height = Math.max(lp.height - MIN_RATIO, mMinHeight);
 					if (lp.width > lp.height / mRatio) {
 						lp.width = Math.max((int) (lp.height / mRatio), mMinWidth);
 					}
 				} else {
-					// 宽度超过比例
 					lp.width = Math.max(lp.width - (int) (MIN_RATIO / mRatio), mMinWidth);
 					if (lp.height > lp.width * mRatio) {
 						lp.height = Math.max((int) (lp.width * mRatio), mMinHeight);
