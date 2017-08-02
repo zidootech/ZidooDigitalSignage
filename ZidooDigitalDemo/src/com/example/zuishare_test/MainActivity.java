@@ -23,6 +23,7 @@ import com.zidoo.test.digitalsignage.DigitalSignageActivity;
 import com.zidoo.test.hdmi.HDMIActivity;
 import com.zidoo.test.hdmi.pip.PiPActivity;
 import com.zidoo.test.hdmi.pip.PiPService;
+import com.zidoo.test.hdmi.record.RecordActivity;
 import com.zidoo.test.hdmi.video.HdmiAndVideoActivity;
 import com.zidoo.test.screen.resolution.ResolutionActivity;
 import com.zidoo.test.screen.rotate.ScreenRotateActivity;
@@ -144,6 +145,10 @@ public class MainActivity extends Activity {
 		case R.id.digital:
 			stopService(new Intent(this, PiPService.class));
 			startActivity(new Intent(this, DigitalSignageActivity.class));
+			break;
+		case R.id.hdmi_record:
+			stopService(new Intent(this, PiPService.class));
+			startActivity(new Intent(this, RecordActivity.class));
 			break;
 
 		default:

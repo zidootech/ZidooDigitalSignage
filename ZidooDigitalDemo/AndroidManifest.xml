@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.zuishare_test"
-    android:versionCode="1"
-    android:versionName="1.1" >
+    android:versionCode="5"
+    android:versionName="1.5" >
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -66,6 +66,10 @@
         </activity>
         <activity
             android:name="com.zidoo.test.hdmi.video.HdmiAndVideoActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name="com.zidoo.test.hdmi.record.RecordActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
     </application>

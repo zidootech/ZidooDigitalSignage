@@ -115,6 +115,15 @@
                 android:text="Digital signage"
                 android:textColor="#000000"
                 android:textSize="26sp" />
+              <Button
+                android:id="@+id/hdmi_record"
+                android:layout_width="220dip"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dip"
+                android:onClick="onMyClick"
+                android:text="Record"
+                android:textColor="#000000"
+                android:textSize="26sp" />
         </LinearLayout>
     </LinearLayout>
 

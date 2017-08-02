@@ -5,6 +5,7 @@
 
 package com.zidoo.test.hdmi;
 
+import java.io.File;
 import java.util.List;
 
 import android.content.BroadcastReceiver;
@@ -12,14 +13,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.SurfaceTexture;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelFileDescriptor;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.example.zuishare_test.R;
@@ -134,6 +139,7 @@ public class ZidooHdmiDisPlay {
 			rlt = false;
 		}
 		isDisPlay = false;
+		isRecording = false;
 		mFps = 0;
 		mWidth = 0;
 		mHeight = 0;
@@ -355,6 +361,115 @@ public class ZidooHdmiDisPlay {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	public static final int	RECORD_FORMAT_TS	= 0;
+	public static final int	RECORD_FORMAT_MP4	= 1;
+	private boolean			isRecording			= false;
+
+	public boolean isRecording() {
+		return isRecording;
+	}
+
+	public boolean stopRecorder() {
+		try {
+			if (isDisPlay && isRecording) {
+				repeatDisPlay();
+			}
+			try {
+				isRecording = false;
+				if (mHDMIRX != null) {
+					mHDMIRX.setTranscode(false);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Toast.makeText(mContext, "Stop recoder successfull ...", Toast.LENGTH_SHORT).show();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	private void repeatDisPlay() {
+		stop();
+		mHandler.sendEmptyMessageDelayed(DISPLAY, DISPLAYTIME + 2 * 1000);
+	}
+
+	public boolean startRecorder(int format) {
+		if (!isDisPlay) {
+			return false;
+		}
+		try {
+			int w = mWidth;
+			int h = mHeight;
+			int videoBitrate = 20000000;
+			int channelCount = 2;
+			int sampleRate = 48000;
+			int audioBitrate = 64000;
+			if ((w * h) > 1920 * 1080) {
+				w = 1920;
+				h = 1080;
+			}
+			RtkHDMIRxManager.VideoConfig vConfig = new RtkHDMIRxManager.VideoConfig(w, h, videoBitrate);
+			RtkHDMIRxManager.AudioConfig aConfig = new RtkHDMIRxManager.AudioConfig(channelCount, sampleRate, audioBitrate);
+			mHDMIRX.configureTargetFormat(vConfig, aConfig);
+			String path = getFlashPath("recodedemo") + System.currentTimeMillis() + (format == RECORD_FORMAT_TS ? ".ts" : ".mp4");
+			Log.v("bob", "recorde path = "+path);
+			int mode = ParcelFileDescriptor.MODE_CREATE | ParcelFileDescriptor.MODE_READ_WRITE;
+			File file = new File(path);
+			file.createNewFile();
+			ParcelFileDescriptor pfd = ParcelFileDescriptor.open(file, mode);
+			mHDMIRX.setTargetFd(pfd, format == RECORD_FORMAT_TS ? RtkHDMIRxManager.HDMIRX_FILE_FORMAT_TS : RtkHDMIRxManager.HDMIRX_FILE_FORMAT_MP4);
+			mHDMIRX.setTranscode(true);
+			isRecording = true;
+			Toast.makeText(mContext, "Start recoder successfull ...", Toast.LENGTH_SHORT).show();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * get flash path
+	 * 
+	 * @author jiangbo 2015-5-7
+	 * @return
+	 */
+	public static String getFlashPath() {
+		try {
+			File sdDir = null;
+			boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED); // 
+			if (sdCardExist) {
+				sdDir = Environment.getExternalStorageDirectory();// 
+				return sdDir.toString();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @author jiangbo 2015-10-31
+	 * @param context
+	 * @param savePath
+	 * @return
+	 */
+	public static String getFlashPath(String savePath) {
+		String flah = getFlashPath();
+		String path = null;
+		if (flah != null) {
+			path = flah + "/" + savePath + "/";
+			File sdcardFile = new File(path);
+			if (!sdcardFile.exists()) {
+				sdcardFile.mkdirs();
+			}
+		}
+		return path;
 	}
 
 }
