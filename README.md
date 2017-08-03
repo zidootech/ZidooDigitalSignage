@@ -13,6 +13,7 @@ The demo includes below contents:
 6. Display output resolution switch                
 7. HDMI IN player                                  
 8. HDMI IN picture in picture (PIP)
+9. HDMI IN record
 
 Please find more detail in readme.docx                         
 
@@ -22,6 +23,11 @@ The demo code is setup by Eclipse, and prebuilt apks are included.
 Try and Enjoy it!                                              
 
 Thanks for your attention to this project. 
+
+Tips:
+    When build apk form source with debug key of Eclipse or Android Studio.
+    It will crash when exit.
+    To avoid this, please sign apk with your own valid key.
 
 ## Preview video
 https://www.youtube.com/watch?v=LFJzIgwbfww
