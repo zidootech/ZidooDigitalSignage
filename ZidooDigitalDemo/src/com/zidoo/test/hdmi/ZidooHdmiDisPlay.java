@@ -31,6 +31,7 @@ import com.example.zuishare_test.R;
 import com.realtek.hardware.RtkHDMIRxManager;
 import com.realtek.server.HDMIRxParameters;
 import com.realtek.server.HDMIRxStatus;
+import com.zidoo.test.hdmi.record.RecordUtil;
 import com.zidoo.test.zidooutil.MyLog;
 
 public class ZidooHdmiDisPlay {
@@ -399,6 +400,10 @@ public class ZidooHdmiDisPlay {
 
 	public boolean startRecorder(int format) {
 		if (!isDisPlay) {
+			return false;
+		}
+		if (RecordUtil.isHdcp()) {
+			Toast.makeText(mContext, "Copyrighted content,the operation isn't permitted.", Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		try {

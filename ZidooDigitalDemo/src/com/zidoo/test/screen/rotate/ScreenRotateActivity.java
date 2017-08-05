@@ -56,7 +56,7 @@ public class ScreenRotateActivity extends Activity {
 	private void setDisHit() {
 		try {
 			String dis[] = { "0", "90", "180", "270" };
-			mValuesView.setText("Current： " + dis[mZidooScreenRotateTool.getScreenRotation()]);
+			mValuesView.setText("Current: " + dis[mZidooScreenRotateTool.getScreenRotation()]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

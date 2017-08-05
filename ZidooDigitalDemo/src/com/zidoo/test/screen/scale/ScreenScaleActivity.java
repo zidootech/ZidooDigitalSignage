@@ -50,7 +50,7 @@ public class ScreenScaleActivity extends Activity {
 
 	private void setDisHit() {
 		try {
-			mValuesView.setText("Current： " + mScreenScaleTool.getScreenScale());
+			mValuesView.setText("Current: " + mScreenScaleTool.getScreenScale());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
