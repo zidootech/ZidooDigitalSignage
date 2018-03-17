@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 import android.view.Surface;
+import android.widget.VideoView;
 
 
 public class VideoDecodeThread extends Thread {

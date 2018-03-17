@@ -40,7 +40,7 @@ public class ZidooHdmiDisPlay {
 	public View								mPreview					= null;
 	public static final int					TYPE_SURFACEVIEW			= 0;
 	public static final int					TYPE_TEXTUREVIEW			= 1;
-	private int								mViewType					= TYPE_TEXTUREVIEW;
+	private int								mViewType					= TYPE_SURFACEVIEW;
 	public TextureView						mTextureView				= null;
 	public SurfaceTexture					mSurfaceTextureForNoPreview	= null;
 	public FloatingWindowSurfaceCallback	mCallback					= null;
@@ -292,7 +292,7 @@ public class ZidooHdmiDisPlay {
 
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
+			
 		}
 	}
 
@@ -402,10 +402,10 @@ public class ZidooHdmiDisPlay {
 		if (!isDisPlay) {
 			return false;
 		}
-		if (RecordUtil.isHdcp()) {
-			Toast.makeText(mContext, "Copyrighted content,the operation isn't permitted.", Toast.LENGTH_SHORT).show();
-			return false;
-		}
+//		if (RecordUtil.isHdcp()) {
+//			Toast.makeText(mContext, "Copyrighted content,the operation isn't permitted.", Toast.LENGTH_SHORT).show();
+//			return false;
+//		}
 		try {
 			int w = mWidth;
 			int h = mHeight;

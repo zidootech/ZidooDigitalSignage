@@ -5,13 +5,13 @@
 
 package com.zidoo.test.hdmi.video;
 
+import java.lang.reflect.Method;
+
+import com.zidoo.test.zidooutil.MyLog;
+
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.media.AudioFormat;
 import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -22,6 +22,7 @@ import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.media.MediaPlayer.OnVideoSizeChangedListener;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -104,6 +105,13 @@ public class VideoView extends SurfaceView {
 		// mContext.sendBroadcast(i);
 		try {
 			mMediaPlayer = new MediaPlayer();
+			try {
+				Method useRTMediaPlayer=MediaPlayer.class.getDeclaredMethod("useRTMediaPlayer", Integer.TYPE);
+				useRTMediaPlayer.setAccessible(true);
+				useRTMediaPlayer.invoke(mMediaPlayer, 2);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 //			AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 //			if (am.isSpeakerphoneOn()) {
 //				am.setSpeakerphoneOn(false);
