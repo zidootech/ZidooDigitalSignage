@@ -105,13 +105,15 @@ public class VideoView extends SurfaceView {
 		// mContext.sendBroadcast(i);
 		try {
 			mMediaPlayer = new MediaPlayer();
-			try {
-				Method useRTMediaPlayer=MediaPlayer.class.getDeclaredMethod("useRTMediaPlayer", Integer.TYPE);
-				useRTMediaPlayer.setAccessible(true);
-				useRTMediaPlayer.invoke(mMediaPlayer, 2);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			
+//			try {
+//				Method useRTMediaPlayer=MediaPlayer.class.getDeclaredMethod("useRTMediaPlayer", Integer.TYPE);
+//				useRTMediaPlayer.setAccessible(true);
+//				useRTMediaPlayer.invoke(mMediaPlayer, 2);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+			
 //			AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
 //			if (am.isSpeakerphoneOn()) {
 //				am.setSpeakerphoneOn(false);
