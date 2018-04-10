@@ -36,6 +36,18 @@
                 android:textColor="#ffffff"
                 android:textSize="18sp" />
 
+            <TextView
+                android:id="@+id/home_ac_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:background="#66000000"
+                android:padding="5dip"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -57,6 +69,7 @@
                 android:textColor="#ffffff"
                 android:textSize="32sp"
                 android:visibility="gone" />
+
             <RelativeLayout
                 android:id="@+id/home_ac_video_hdmi_textureView"
                 android:layout_width="match_parent"
