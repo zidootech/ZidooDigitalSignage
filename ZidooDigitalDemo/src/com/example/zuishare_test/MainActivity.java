@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.zidoo.test.decoder.MediaCodecActivity;
 import com.zidoo.test.digitalsignage.DigitalSignageActivity;
+import com.zidoo.test.hdim.udp.UDPActivity;
 import com.zidoo.test.hdmi.HDMIActivity;
 import com.zidoo.test.hdmi.pip.PiPActivity;
 import com.zidoo.test.hdmi.pip.PiPService;
@@ -149,6 +150,10 @@ public class MainActivity extends Activity {
 		case R.id.hdmi_record:
 			stopService(new Intent(this, PiPService.class));
 			startActivity(new Intent(this, RecordActivity.class));
+			break;
+		case R.id.udp:
+			stopService(new Intent(this, PiPService.class));
+			startActivity(new Intent(this, UDPActivity.class));
 			break;
 
 		default:

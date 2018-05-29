@@ -30,6 +30,7 @@ public class PlayVideoTool {
 
 	// play video
 	public void play() {
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

@@ -24,13 +24,14 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
 
 import com.example.zuishare_test.R;
 import com.realtek.hardware.RtkHDMIRxManager;
 import com.realtek.server.HDMIRxParameters;
 import com.realtek.server.HDMIRxStatus;
+import com.zidoo.test.hdim.udp.UdpTool;
 import com.zidoo.test.hdmi.record.RecordUtil;
 import com.zidoo.test.zidooutil.MyLog;
 
@@ -62,18 +63,27 @@ public class ZidooHdmiDisPlay {
 	private View							mHdmieSigleView				= null;
 	private HdmiInFristDisplayListener		mHdmiInFristDisplayListener	= null;
 	private boolean							isFirstDisplay				= true;
+	private UdpTool							mUdpTool					= null;
 
 	public interface HdmiInFristDisplayListener {
 		public void fristDisplay();
 	}
 
-	public ZidooHdmiDisPlay(Context mContext, ViewGroup rootView, HdmiInFristDisplayListener mHdmiInFristDisplayListener,int type) {
+	public ZidooHdmiDisPlay(Context mContext, ViewGroup rootView, HdmiInFristDisplayListener mHdmiInFristDisplayListener, int type) {
 		this.mContext = mContext;
 		this.mHdmiInFristDisplayListener = mHdmiInFristDisplayListener;
 		this.mViewType = type;
 		init(rootView);
 	}
- 
+
+	public ZidooHdmiDisPlay(Context mContext, ViewGroup rootView, HdmiInFristDisplayListener mHdmiInFristDisplayListener, int type, UdpTool mUdpTool) {
+		this.mContext = mContext;
+		this.mUdpTool = mUdpTool;
+		this.mHdmiInFristDisplayListener = mHdmiInFristDisplayListener;
+		this.mViewType = type;
+		init(rootView);
+	}
+
 	public void init(ViewGroup rootView) {
 		mRootView = rootView;
 		init();
@@ -292,7 +302,7 @@ public class ZidooHdmiDisPlay {
 
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-			
+
 		}
 	}
 
@@ -402,10 +412,10 @@ public class ZidooHdmiDisPlay {
 		if (!isDisPlay) {
 			return false;
 		}
-//		if (RecordUtil.isHdcp()) {
-//			Toast.makeText(mContext, "Copyrighted content,the operation isn't permitted.", Toast.LENGTH_SHORT).show();
-//			return false;
-//		}
+		if (RecordUtil.isHdcp()) {
+			Toast.makeText(mContext, "Copyrighted content,the operation isn't permitted.", Toast.LENGTH_SHORT).show();
+			return false;
+		}
 		try {
 			int w = mWidth;
 			int h = mHeight;
@@ -421,7 +431,7 @@ public class ZidooHdmiDisPlay {
 			RtkHDMIRxManager.AudioConfig aConfig = new RtkHDMIRxManager.AudioConfig(channelCount, sampleRate, audioBitrate);
 			mHDMIRX.configureTargetFormat(vConfig, aConfig);
 			String path = getFlashPath("recodedemo") + System.currentTimeMillis() + (format == RECORD_FORMAT_TS ? ".ts" : ".mp4");
-			Log.v("bob", "recorde path = "+path);
+			Log.v("bob", "recorde path = " + path);
 			int mode = ParcelFileDescriptor.MODE_CREATE | ParcelFileDescriptor.MODE_READ_WRITE;
 			File file = new File(path);
 			file.createNewFile();
@@ -446,9 +456,9 @@ public class ZidooHdmiDisPlay {
 	public static String getFlashPath() {
 		try {
 			File sdDir = null;
-			boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED); // 
+			boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED); //
 			if (sdCardExist) {
-				sdDir = Environment.getExternalStorageDirectory();// 
+				sdDir = Environment.getExternalStorageDirectory();//
 				return sdDir.toString();
 			}
 		} catch (Exception e) {
@@ -477,4 +487,70 @@ public class ZidooHdmiDisPlay {
 		return path;
 	}
 
+	private boolean	isUdping	= false;
+
+	public boolean stopUdp() {
+		try {
+			if (isDisPlay && isUdping) {
+				repeatDisPlay();
+			}
+			try {
+				isUdping = false;
+				mUdpTool.stopUdp();
+				if (mHDMIRX != null) {
+					mHDMIRX.setTranscode(false);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Toast.makeText(mContext, "Stop udp successfull ...", Toast.LENGTH_SHORT).show();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean startUdp() {
+		if (!isDisPlay) {
+			return false;
+		}
+		if (RecordUtil.isHdcp()) {
+			Toast.makeText(mContext, "Copyrighted content,the operation isn't permitted.", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		try {
+			int w = mWidth;
+			int h = mHeight;
+			int videoBitrate = 20000000;
+			int channelCount = 2;
+			int sampleRate = 48000;
+			int audioBitrate = 64000;
+			if ((w * h) > 1920 * 1080) {
+				w = 1920;
+				h = 1080;
+			}
+			RtkHDMIRxManager.VideoConfig vConfig = new RtkHDMIRxManager.VideoConfig(w, h, videoBitrate);
+			RtkHDMIRxManager.AudioConfig aConfig = new RtkHDMIRxManager.AudioConfig(channelCount, sampleRate, audioBitrate);
+			mHDMIRX.configureTargetFormat(vConfig, aConfig);
+			ParcelFileDescriptor pfd = mUdpTool.prepareIO();
+			if (pfd == null) {
+				Toast.makeText(mContext, "Start udp failed ...", Toast.LENGTH_SHORT).show();
+				return false;
+			}
+			mHDMIRX.setTargetFd(pfd, RtkHDMIRxManager.HDMIRX_FILE_FORMAT_TS);
+			mHDMIRX.setTranscode(true);
+			isUdping = true;
+			Toast.makeText(mContext, "Start udp successfull ...", Toast.LENGTH_SHORT).show();
+			mUdpTool.startUdp();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean isUdping() {
+		return isUdping;
+	}
 }

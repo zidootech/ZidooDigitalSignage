@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" >
+
+    <RelativeLayout
+        android:id="@+id/home_ac_hdmi"
+        android:layout_width="640dip"
+        android:layout_height="420dip"
+        android:layout_centerInParent="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false" >
+
+        <TextView
+            android:id="@+id/home_ac_video_hdmi_nosigle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="2dip"
+            android:text="No HDMI IN Signal"
+            android:textColor="#ffffff"
+            android:textSize="32sp"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/home_ac_video_hdmi_textureView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/home_ac_video_hdmi_udp_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dip"
+        android:textColor="#ffffff"
+        android:textSize="30sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="30dip"
+        android:layout_marginTop="30dip"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/home_ac_video_hdmi_udp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onMyClick"
+            android:padding="8dip"
+            android:text="Start UDP"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</RelativeLayout>
